@@ -16,7 +16,7 @@ class WageCalculator {
 
   addWage(String name, int day, double value) {
     _wages[name] = _wages[name] ?? {};
-    _wages[name]?[day] = _wages[name]?[day] ?? 0 + value;
+    _wages[name]?[day] = (_wages[name]?[day] ?? 0) + value;
   }
 
   num? getTotalFor({
@@ -37,14 +37,32 @@ class WageCalculator {
     return 0;
   }
 
-  Map<String, double> get totals {
+  String get totals {
     var result = <String, double>{};
     for (var name in _wages.keys) {
       var wage = _wages[name]!;
       for (var day in wage.keys) {
         var value = wage[day]!;
-        var key = '$name $day';
-        result[key] = result[key] ?? 0 + value;
+        result[name] = (result[name] ?? 0) + value;
+      }
+    }
+
+    String strResult = '';
+    for (var name in result.keys) {
+      var wage = result[name]!;
+      strResult += '$name earned a total of \$$wage in $_month\n';
+    }
+    return strResult;
+  }
+
+  @override
+  String toString() {
+    String result = '';
+    for (var name in _wages.keys) {
+      Map<int, double> dayMap = _wages[name]!;
+      for (var day in dayMap.keys) {
+        double amount = dayMap[day]!;
+        result += '$name was paid \$$amount on $_month $day\n';
       }
     }
     return result;
